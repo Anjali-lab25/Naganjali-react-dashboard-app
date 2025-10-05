@@ -3,7 +3,8 @@
 import { Card, CardContent, Chip, Typography, Box, Stack } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
-import React from 'react';
+import React, { useState } from 'react';
+import { RevenueGraphModal } from './RevenueGraphModal.component';
 
 export const MetricCard = ({ 
   title, 
@@ -11,7 +12,8 @@ export const MetricCard = ({
   icon: Icon, 
   data, 
   color, 
-  trend 
+  trend,
+  showGraph = false
 }: {
   title: string;
   value: string;
@@ -19,20 +21,35 @@ export const MetricCard = ({
   data: number[];
   color: string;
   trend: string;
-}) => (
-  <Card sx={{ 
-    height: '100%',
-    background: 'linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%)',
-    border: '1px solid',
-    borderColor: alpha('#94a3b8', 0.15),
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    '&:hover': {
-      transform: 'translateY(-4px) scale(1.02)',
-      boxShadow: `0 20px 40px ${alpha(color, 0.2)}, 0 0 0 1px ${alpha(color, 0.1)}`,
-      borderColor: alpha(color, 0.3),
+  showGraph?: boolean;
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCardClick = () => {
+    if (showGraph) {
+      setIsModalOpen(true);
     }
-  }}>
-    <CardContent sx={{ p: 3 }}>
+  };
+
+  return (
+  <>
+    <Card 
+      onClick={handleCardClick}
+      sx={{ 
+        height: '100%',
+        background: 'linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%)',
+        border: '1px solid',
+        borderColor: alpha('#94a3b8', 0.15),
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        cursor: showGraph ? 'pointer' : 'default',
+        '&:hover': {
+          transform: 'translateY(-4px) scale(1.02)',
+          boxShadow: `0 20px 40px ${alpha(color, 0.2)}, 0 0 0 1px ${alpha(color, 0.1)}`,
+          borderColor: alpha(color, 0.3),
+        }
+      }}
+    >
+      <CardContent sx={{ p: 3 }}>
       <Stack direction="row" alignItems="flex-start" justifyContent="space-between" mb={2}>
         <Box>
           <Typography variant="body2" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.75rem' }}>
@@ -73,6 +90,14 @@ export const MetricCard = ({
           sx={{ width: '100%' }}
         />
       </Box>
-    </CardContent>
-  </Card>
-);
+        </CardContent>
+    </Card>
+    {showGraph && (
+      <RevenueGraphModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    )}
+  </>
+  );
+}

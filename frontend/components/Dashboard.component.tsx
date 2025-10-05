@@ -460,6 +460,7 @@ export const Dashboard = (): JSX.Element => {
                             data={miniMetrics.revenue}
                             color="#10b981"
                             trend="+12.5%"
+                            showGraph={true}
                         />
                     </Box>
                     <Box sx={{ flex: '1 1 280px', minWidth: 280 }}>
